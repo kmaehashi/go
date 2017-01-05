@@ -170,6 +170,14 @@ func (p *Profile) Boundaries(src []byte) (boundaries []Boundary) {
 			continue // Don't advance through src; maybe the next block starts here.
 		}
 		if src[si] == '\n' {
+			if b.StartLine == line && col < b.StartCol {
+				boundaries = append(boundaries, boundary(si, true, b.Count))
+			}
+			if b.EndLine == line && col < b.EndCol {
+				boundaries = append(boundaries, boundary(si, false, 0))
+				bi++
+				continue
+			}
 			line++
 			col = 0
 		}
